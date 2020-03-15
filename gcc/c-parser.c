@@ -190,6 +190,29 @@ typedef struct c_parser GTY(())
 
 static GTY (()) c_parser *the_parser;
 
+//B_chenhui
+static char * c_id_kind_str[] = {
+"C_ID_ID",
+"C_ID_TYPENAME",
+"C_ID_CLASSNAME",
+"C_ID_NONE"
+};
+
+void
+dump_a_token(c_token *ct){
+    FILE *fp;
+    static int i = 1;
+    expanded_location xloc;
+
+    xloc = expand_location(ct->location);
+    fp=fopen("dump-token", "a");
+    fprintf(fp, "[%d] %-16s %-10s %-12s %-12s %8s:%d, %d\n", i++, cpp_ttype_str[ct->type],
+        c_id_kind_str[ct->id_kind], rid_str[ct->keyword], pragma_kind_str[ct->pragma_kind], xloc.
+        file, xloc.line, xloc.column);                                  //打印符号值的基本信息
+    if(ct->value) dump_node(ct->value, 0xffff, fp); //打印符号值：树节点
+    fclose(fp);
+}
+//E_chenhui
 
 /* Read in and lex a single token, storing it in *TOKEN.  */
 
@@ -297,6 +320,7 @@ c_lex_one_token (c_parser *parser, c_token *token)
       break;
     }
   timevar_pop (TV_LEX);
+  dump_a_token(token);//chenhui
 }
 
 /* Return a pointer to the next token from PARSER, reading it in if
