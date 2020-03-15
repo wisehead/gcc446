@@ -7457,6 +7457,16 @@ gimplify_function_tree (tree fndecl)
   gimple_seq seq;
   gimple bind;
 
+  //B_chenhui
+  FILE *fp;
+  char filename[128];
+  sprintf(filename, "AST-%s", current_function_name());
+  fp = fopen(filename, "w");
+  //dump_node(fndecl, 0x1FFF8, fp);
+  dump_node(fndecl, 0x1FFF9, fp);
+  fclose(fp);
+  //E_chenhui
+
   oldfn = current_function_decl;
   current_function_decl = fndecl;
   if (DECL_STRUCT_FUNCTION (fndecl))
